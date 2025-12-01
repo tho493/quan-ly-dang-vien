@@ -1,0 +1,11 @@
+FTP user profile
+Server 113.160.212.166
+Port 21
+User：ftp_qlsx_ls_vina_com
+Password：CH6wYcyKniAp3isJ
+
+Database user profile
+http://113.160.212.166:888/phpmyadmin_ed45d1128f640a51
+Database name：sql_qlsx_ls_vina
+User：sql_qlsx_ls_vina
+Password：hATncy5Aj5xiJDbM
