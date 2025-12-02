@@ -1,17 +1,27 @@
 <?php
 //load model
-require_once('admin/models/hosodang.php');
+require_once('lib/model.php');
 
-if (isset($_GET['id']))
-    $id = intval($_GET['id']);
-else
-    $id = 0;
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['user'])) {
+    header('Location: admin.php');
+    exit();
+}
 
+$user_session = $_SESSION['user'];
+$hosoid = $user_session['HoSoId'];
+
+// Lấy thông tin đảng viên
 $options = array(
     'select' => 'hosodang.*, chibo.TenChiBo',
-    'where' => '(hosodang.ChiBoId = chibo.Id) AND (hosodang.Id =' . $id . ')'
+    'where' => '(hosodang.ChiBoId = chibo.Id) AND (hosodang.Id =' . $hosoid . ')'
 );
 $user_info = Select_a_record('hosodang, chibo', $options);
+
+if (!$user_info) {
+    header('Location: index.php');
+    exit();
+}
 
 // Lấy danh sách các mục hồ sơ
 $list_muc_hoso = get_all('hosodang_muc', array(
@@ -20,7 +30,7 @@ $list_muc_hoso = get_all('hosodang_muc', array(
 
 // Lấy danh sách file hồ sơ theo mục
 $list_files_muc = get_all('hosodang_files_muc', array(
-    'where' => "HoSoId = $id",
+    'where' => "HoSoId = $hosoid",
     'order_by' => 'MucId ASC, Nam DESC'
 ));
 
@@ -34,13 +44,14 @@ foreach ($list_files_muc as $file) {
     $files_by_muc[$muc_id][] = $file;
 }
 
-// Lấy hồ sơ theo năm (phiếu bổ sung lý lịch, kiểm điểm cuối năm, xác nhận cư trú)
+// Lấy hồ sơ theo năm
 $list_hoso_nam = get_all('hosodang_nam', array(
-    'where' => "HoSoId = $id",
+    'where' => "HoSoId = $hosoid",
     'order_by' => 'Nam DESC'
 ));
 
-$title = 'Thông tin hồ sơ đảng viên';
+$title = 'Hồ sơ đảng viên';
 
 //load view
-require('admin/views/hosodang/info.php');
+require('website/views/hosodangvien/index.php');
+
