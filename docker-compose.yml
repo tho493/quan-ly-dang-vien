@@ -7,7 +7,6 @@ services:
     ports:
       - "81:80"
       - "443:443"
-    # Remove the read-only flag to avoid issues with modifying files in /etc/nginx/conf.d and /etc/nginx/ssl.
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
