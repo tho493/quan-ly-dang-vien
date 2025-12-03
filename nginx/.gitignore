@@ -1,0 +1,10 @@
+# Ignore SSL private keys
+ssl/key.pem
+ssl/*.key
+
+# Keep certificate files (but not private keys)
+!ssl/cert.pem
+!ssl/README.md
+!ssl/.gitkeep
+!ssl/generate-self-signed.sh
+
