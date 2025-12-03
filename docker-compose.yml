@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tho493/dang-vien:latest
+    container_name: dangvien_web
+    ports:
+      - "9080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=dangvien_db
+    networks:
+      - dangvien_network
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.4
+    container_name: dangvien_db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dangvien_db
+      MYSQL_USER: dangvien_user
+      MYSQL_PASSWORD: dangvien_pass
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - dangvien_network
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: dangvien_phpmyadmin
+    ports:
+      - "9081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 300M
+    depends_on:
+      - db
+    networks:
+      - dangvien_network
+    restart: unless-stopped
+
+networks:
+  dangvien_network:
+    driver: bridge
+
+volumes:
+  db_data:
+
